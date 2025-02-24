@@ -61,7 +61,7 @@ module synapse_block #(
             // Shift register for square-wave output (16-bit cyclic pattern)
             reg [15:0] shift_reg;
             
-            // Shift register rotation (kept as in your original code)
+            // Shift register rotation 
             always @(posedge clk or negedge rst_n) begin
                 if (!rst_n)
                     shift_reg <= 16'b1111111100000000;
