@@ -10,7 +10,7 @@ wire num;
     integer i, j, k;
     reg [3:0] temp;
 
-control_to_neuron uut(.clk(clk),.bit(),.phi_out(phi_out));
+ control_to_neuron uut(.clk(clk),.bit(),.phi_out(phi_out),.num(num));
 initial begin 
 clk=0;
 forever #5 clk=~clk;
