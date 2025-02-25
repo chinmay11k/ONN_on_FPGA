@@ -16,8 +16,6 @@ clk=0;
 forever #5 clk=~clk;
 end
 initial begin
-bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
-bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
 bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
@@ -26,12 +24,13 @@ bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
 bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
+bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10; 
+ bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
-bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10;
+bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
+bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10; 
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
 bit = 0;#10;bit = 0;#10;bit = 0;#10;bit = 0;#10;
-bit = 1;#10;bit = 1;#10;bit = 1;#10;bit = 1;#10;
-
 
 k = 0;
         for (i = 0; i < 5; i = i + 1) begin
