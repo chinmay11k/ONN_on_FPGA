@@ -10,7 +10,7 @@ always@(posedge sclk)
 begin
 if(re==1)
     state=0;
-    else
+else
     begin
         if(load==1)
         state<={data_in,state[0:4*n-2]};
