@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digit Drawing Tool</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(6, 40px);
+      grid-template-rows: repeat(10, 40px);
+      gap: 2px;
+      margin-bottom: 1rem;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #ccc;
+      background-color: rgb(255, 255, 255);
+      cursor: pointer;
+    }
+    #palette {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    .shade {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .selected {
+      border-color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Digit Drawing Tool</h1>
+
+  <div id="palette"></div>
+
+  <label for="digit">Digit Label:</label>
+  <select id="digit">
+    <option value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+  </select>
+
+  <div id="grid"></div>
+
+  <button onclick="resetGrid()">Reset</button>
+  <button onclick="saveImage()">Save</button>
+  <button onclick="saveImage(true)">Save as New</button>
+  <button onclick="saveDefault()">Save as Default</button>
+  <button onclick="loadDefault()">Load Default</button>
+
+  <script>
+    const grayscaleValues = [0, 36, 72, 109, 145, 182, 218, 255];
+    let selectedShade = 255;
+    const defaultImage = [];
+
+    const palette = document.getElementById("palette");
+    grayscaleValues.forEach(val => {
+      const shade = document.createElement("div");
+      shade.className = "shade";
+      shade.style.backgroundColor = `rgb(${val},${val},${val})`;
+      if (val === 255) shade.classList.add("selected");
+      shade.onclick = () => {
+        document.querySelectorAll(".shade").forEach(s => s.classList.remove("selected"));
+        shade.classList.add("selected");
+        selectedShade = val;
+      };
+      palette.appendChild(shade);
+    });
+
+    const grid = document.getElementById("grid");
+    const cells = [];
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 6; col++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.dataset.row = row;
+        cell.dataset.col = col;
+        cell.style.backgroundColor = `rgb(${selectedShade}, ${selectedShade}, ${selectedShade})`;
+        cell.onclick = () => {
+          cell.style.backgroundColor = `rgb(${selectedShade}, ${selectedShade}, ${selectedShade})`;
+          cell.dataset.val = selectedShade;
+        };
+        cell.dataset.val = 255;
+        grid.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function resetGrid() {
+      cells.forEach(cell => {
+        cell.style.backgroundColor = "rgb(255, 255, 255)";
+        cell.dataset.val = 255;
+      });
+    }
+
+    async function saveImage(isNew = false) {
+      const label = document.getElementById("digit").value;
+      const data = cells.map(cell => parseInt(cell.dataset.val));
+      const body = JSON.stringify({ label, data, isNew });
+      const response = await fetch("/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body
+      });
+      const res = await response.json();
+      alert(res.message);
+    }
+
+    function saveDefault() {
+      defaultImage.length = 0;
+      defaultImage.push(...cells.map(cell => parseInt(cell.dataset.val)));
+      alert("Default image saved.");
+    }
+
+    function loadDefault() {
+      if (defaultImage.length !== cells.length) {
+        alert("No default image found.");
+        return;
+      }
+      cells.forEach((cell, i) => {
+        const val = defaultImage[i];
+        cell.dataset.val = val;
+        cell.style.backgroundColor = `rgb(${val}, ${val}, ${val})`;
+      });
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "n") {
+        saveImage(true); // Save as New
+        e.preventDefault();
+      } else if (e.key === " ") {
+        loadDefault();   // Load Default
+        e.preventDefault();
+      }
+    });
+    
+
+  </script>
+</body>
+</html>
